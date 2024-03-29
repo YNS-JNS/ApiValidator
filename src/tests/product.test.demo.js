@@ -1,4 +1,5 @@
-const mongoose = require('mongoose');
+// Unit test for the Routes:
+
 const request = require('supertest');
 const app = require('../../server');
 

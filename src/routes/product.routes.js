@@ -1,10 +1,10 @@
 const express = require("express");
 const productCtrl = require("../controllers/product.controllers");
-const {
-    isIdValidator,
-    productValidator,
-    updateValidator
-} = require("../middlewares/validations/productValidator");
+// const {
+//     isIdValidator,
+//     productValidator,
+//     updateValidator
+// } = require("../middlewares/validations/productValidator");
 
 const router = express.Router(); // Router func
 
@@ -30,7 +30,8 @@ const router = express.Router(); // Router func
  * @desc POST | Create Product
  * @params No param
 */
-router.post('/', productValidator, productCtrl.createProduct);
+// router.post('/', productValidator, productCtrl.createProduct);
+router.post('/', productCtrl.createProduct);
 
 // ______________________________________________________________________
 
@@ -59,7 +60,12 @@ router.post('/', productValidator, productCtrl.createProduct);
 router.get('/', productCtrl.getAllProducts);
 
 // ______________________________________________________________________
-router.get('/', isIdValidator, productCtrl.getProductById);
+/**
+ * @desc GET | Get a Product by ID
+ * @params No param
+*/
+// router.get('/', isIdValidator, productCtrl.getProductById);
+router.get('/', productCtrl.getProductById);
 
 // ______________________________________________________________________
 
@@ -67,7 +73,8 @@ router.get('/', isIdValidator, productCtrl.getProductById);
  * @desc PUT | Update a Product
  * @params {id}
 */
-router.put('/:id', isIdValidator, updateValidator, productCtrl.updateProduct);
+// router.put('/:id', isIdValidator, updateValidator, productCtrl.updateProduct);
+router.put('/:id', productCtrl.updateProduct);
 
 // ______________________________________________________________________
 
@@ -75,7 +82,8 @@ router.put('/:id', isIdValidator, updateValidator, productCtrl.updateProduct);
  * @desc DELETE | Delete a Product
  * @params {id}
 */
-router.delete('/:id', isIdValidator, updateValidator, productCtrl.deleteProduct);
+// router.delete('/:id', isIdValidator, updateValidator, productCtrl.deleteProduct);
+router.delete('/:id', productCtrl.deleteProduct);
 
 // ______________________________________________________________________
 
