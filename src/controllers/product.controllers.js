@@ -130,6 +130,8 @@ exports.updateProduct = async (req, res) => {
 
   const { error: dataError } = updateProduct(req.body, { abortEarly: false });
 
+  // { abortEarly: false }: vous obtiendrez toutes les erreurs de validation à la fois
+
   // If the validation fails, send a 400 error with the error messages.
   if (dataError) {
 
@@ -139,7 +141,8 @@ exports.updateProduct = async (req, res) => {
     // Send a 400 error response with the error messages.
     return res.status(400).json({
       status: 400,
-      message: errorMessage
+      // message: errorMessage
+      message: "Invalid data",
     })
   }
 
@@ -168,6 +171,17 @@ exports.updateProduct = async (req, res) => {
  * or rejects with an error message.
  */
 exports.deleteProduct = async (req, res) => {
+
+  const { error: idError } = checkingId(req.params.id);
+
+  if (idError) {
+
+    return res.status(400).json({
+      status: 400,
+      message: `Product Id = ${req.params.id} is invalid !`
+    });
+  }
+
   try {
     // Find and delete the product in the database by its ID
     const product = await ProductModel.findByIdAndDelete(req.params.id);

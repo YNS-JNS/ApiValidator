@@ -9,15 +9,16 @@ jest.mock('../models/product.model', () => ({
     findByIdAndDelete: jest.fn(),
 }));
 
-/**
- * @desc Unit test for POST
-*/
 describe('Product Controller Tests', () => {
 
-    // Create a new product
+    /**
+    * @test {createProduct}
+    */
     describe('create a new Product', () => {
 
-        // Create a new product successfully
+        /**
+        * @testcase {should create a new product}
+        */
         test('should create a new product', async () => {
             const req = {
                 body: {
@@ -40,7 +41,9 @@ describe('Product Controller Tests', () => {
             });
         });
 
-        // Return error for missing product fields
+        /**
+        * @testcase {should return error for missing fields}
+        */
         test('should return error for missing fields', async () => {
             // missing name field
             const req = { body: { price: 10, category: 'Test Category' } };
@@ -58,10 +61,14 @@ describe('Product Controller Tests', () => {
         });
     });
 
-    // Retrieve all products from
+    /**
+    * @testcase {getAllProducts}
+    */
     describe('get All Products', () => {
 
-        // Retrieve all products successfully
+        /**
+        * @test {should return all products}
+        */
         test('should return all products', async () => {
             const req = {};
             const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
@@ -82,90 +89,14 @@ describe('Product Controller Tests', () => {
         })
     });
 
-    // Update product by ID
-    describe('Update a product', () => {
-
-        // Update a product successfully
-        test('should update a product', async () => {
-            const req = {
-                body: {
-                    name: 'Updated Product',
-                    price: 10,
-                    category: 'Test Category'
-                },
-                params: { id: '5f7777777777777777777777' }
-            };
-            const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
-
-            const product = { name: 'Test Product', price: 10, category: 'Test Category' };
-
-            ProductModel.findByIdAndUpdate.mockResolvedValueOnce(product);
-
-            await productController.updateProduct(req, res);
-
-            expect(ProductModel.findByIdAndUpdate).toHaveBeenCalledWith(req.params.id, req.body, { new: true });
-            expect(res.status).toHaveBeenCalledWith(200);
-            expect(res.json).toHaveBeenCalledWith({
-                message: 'Product updated successfully',
-                product,
-            });
-        });
-
-        // ID is not valid
-        test('should return error if ID is not valid', async () => {
-            const req = {
-                body: {
-                    name: 'Updated Product',
-                    price: 10,
-                    category: 'Test Category'
-                },
-                params: { id: '5f77777777777777777777k' }
-            };
-            const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
-
-            await productController.updateProduct(req, res);
-
-            // Ensure ProductModel.findByIdAndUpdate is not called
-            expect(ProductModel.findByIdAndUpdate).not.toHaveBeenCalledWith();
-
-            expect(res.status).toHaveBeenCalledWith(400);
-            expect(res.json).toHaveBeenCalledWith({
-                status: 400,
-                message: `Product Id = ${req.params.id} is invalid !`
-            });
-        });
-
-        // Product is not found
-        test('should return error if product is not found', async () => {
-            const req = {
-                body: {
-                    name: 'Updated Product',
-                    price: 10,
-                    category: 'Test Category'
-                },
-                params: { id: '5f7777777777777777777777' } // Valid Id but product not exist
-            };
-            const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
-
-            // Mock ProductModel.findByIdAndUpdate to return null, simulating product not found
-            ProductModel.findByIdAndUpdate.mockResolvedValueOnce(null);
-
-            await productController.updateProduct(req, res);
-
-            // Ensure the correct response is sent
-            expect(res.status).toHaveBeenCalledWith(404);
-            expect(res.json).toHaveBeenCalledWith({
-                message: 'Product not found'
-            });
-        });
-
-        
-    });
-
-    // Get a product by ID
+    /**
+    * @testcase {getProductById}
+    */
     describe('get a Product By Id', () => {
 
-        // Get a product by ID successfully
+        /**
+        * @test {should return product if ID is valid and product exists}
+        */
         test('should return product if ID is valid and product exists', async () => {
             // Mock product data
             const productData = {
@@ -201,7 +132,9 @@ describe('Product Controller Tests', () => {
             });
         });
 
-        // Return error if ID is not valid
+        /**
+        * @test {should return error if ID is not valid}
+        */
         test('should return error if ID is not valid', async () => {
             const req = {
                 body: {
@@ -225,7 +158,9 @@ describe('Product Controller Tests', () => {
             });
         });
 
-        // Return error if product is not found
+        /**
+        * @test {should return error if product is not found}
+        */
         test('should return error if product is not found', async () => {
             // Mock request object
             const req = {
@@ -252,7 +187,9 @@ describe('Product Controller Tests', () => {
             });
         });
 
-        // Return error if there's an internal server error
+        /**
+        * @test {should return error if there is an internal server error}
+        */
         test('should return error if there is an internal server error', async () => {
             // Mock request object
             const req = {
@@ -276,9 +213,186 @@ describe('Product Controller Tests', () => {
             expect(res.status).toHaveBeenCalledWith(500);
             expect(res.json).toHaveBeenCalledWith({ error: 'Internal server error' });
         });
-
-
     });
 
-    // Delete a product
+    /**
+    * @testcase {updateProduct}
+    */
+    describe('Update a product', () => {
+
+        /**
+        * @test {should update a product}
+        */
+        test('should update a product', async () => {
+            const req = {
+                body: {
+                    name: 'Updated Product',
+                    price: 10,
+                    category: 'Test Category'
+                },
+                params: { id: '5f7777777777777777777777' }
+            };
+            const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+
+            const product = { name: 'Test Product', price: 10, category: 'Test Category' };
+
+            ProductModel.findByIdAndUpdate.mockResolvedValueOnce(product);
+
+            await productController.updateProduct(req, res);
+
+            expect(ProductModel.findByIdAndUpdate).toHaveBeenCalledWith(req.params.id, req.body, { new: true });
+            expect(res.status).toHaveBeenCalledWith(200);
+            expect(res.json).toHaveBeenCalledWith({
+                message: 'Product updated successfully',
+                product,
+            });
+        });
+
+        /**
+        * @test {should return error if ID is not valid}
+        */
+        test('should return error if ID is not valid', async () => {
+            const req = {
+                body: {
+                    name: 'Updated Product',
+                    price: 10,
+                    category: 'Test Category'
+                },
+                params: { id: '5f77777777777777777777k' }
+            };
+            const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+
+            await productController.updateProduct(req, res);
+
+            // Ensure ProductModel.findByIdAndUpdate is not called
+            expect(ProductModel.findByIdAndUpdate).not.toHaveBeenCalledWith();
+
+            expect(res.status).toHaveBeenCalledWith(400);
+            expect(res.json).toHaveBeenCalledWith({
+                status: 400,
+                message: `Product Id = ${req.params.id} is invalid !`
+            });
+        });
+
+        /**
+        * @test {should return error if product is not found}
+        */
+        test('should return error if product is not found', async () => {
+            const req = {
+                body: {
+                    name: 'Updated Product',
+                    price: 10,
+                    category: 'Test Category'
+                },
+                params: { id: '5f7777777777777777777777' } // Valid Id but product not exist
+            };
+            const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+
+            // Mock ProductModel.findByIdAndUpdate to return null, simulating product not found
+            ProductModel.findByIdAndUpdate.mockResolvedValueOnce(null);
+
+            await productController.updateProduct(req, res);
+
+            // Ensure the correct response is sent
+            expect(res.status).toHaveBeenCalledWith(404);
+            expect(res.json).toHaveBeenCalledWith({
+                message: 'Product not found'
+            });
+        });
+
+        /**
+        * @testcase {should return error for missing fields}
+        */
+        test('should return error for missing fields', async () => {
+            // missing name field
+            const req = { body: { category: '' }, params: { id: '5f7777777777777777777777' } };
+            const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+
+            await productController.updateProduct(req, res);
+
+            expect(res.status).toHaveBeenCalledWith(400);
+            expect(res.json).toHaveBeenCalledWith({
+                status: 400,
+                message: "Invalid data",
+            });
+        });
+    });
+
+    /**
+    * @testcase {deleteProduct}
+    */
+    describe('Delete a Product', () => {
+
+        /**
+        * @test {should delete a product}
+        */
+        test('should delete a product', async () => {
+            // Mocked product data
+            const productData = {
+                _id: '5f7777777777777777777777',
+                name: 'Test Product',
+                price: 10,
+                category: 'Test Category'
+            };
+
+            // Mock request object
+            const req = {
+                params: { id: productData._id }
+            };
+
+            // Mock response object
+            const res = {
+                status: jest.fn().mockReturnThis(),
+                json: jest.fn()
+            };
+
+            // Mock ProductModel.findByIdAndDelete to return product data
+            ProductModel.findByIdAndDelete.mockResolvedValueOnce(productData);
+
+            // Call the controller function
+            await productController.deleteProduct(req, res);
+
+            // Expectations
+            expect(ProductModel.findByIdAndDelete).toHaveBeenCalledWith(req.params.id);
+            expect(res.status).toHaveBeenCalledWith(200);
+            expect(res.json).toHaveBeenCalledWith({ message: 'Product deleted successfully' });
+        });
+
+        /**
+        * @test {should return error if ID is invalid}
+        */
+        test('should return error if ID is invalid', async () => {
+            const req = {
+                params: { id: 'invalid_id' }
+            };
+            const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+
+            await productController.deleteProduct(req, res);
+
+            expect(res.status).toHaveBeenCalledWith(400);
+            expect(res.json).toHaveBeenCalledWith({
+                status: 400,
+                message: `Product Id = ${req.params.id} is invalid !`
+            });
+        });
+
+        /**
+        * @test {should return error if product is not found}
+        */
+        test('should return error if product is not found', async () => {
+            const req = {
+                params: { id: '5f7777777777777777777777' } // Non-existing ID
+            };
+            const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+
+            // Mock ProductModel.findByIdAndDelete to return null, simulating product not found
+            ProductModel.findByIdAndDelete.mockResolvedValueOnce(null);
+
+            await productController.deleteProduct(req, res);
+
+            expect(res.status).toHaveBeenCalledWith(404);
+            expect(res.json).toHaveBeenCalledWith({ message: 'Product not found' });
+        });
+    });
+
 });

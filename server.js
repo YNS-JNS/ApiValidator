@@ -34,7 +34,6 @@ app.get('/api/v1/hello', (req, res) => {
 app.use('/api/v1/products', productRoutes);
 
 // Error handling middleware ________
-
 app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).json({ message: 'Internal Server Error' });
